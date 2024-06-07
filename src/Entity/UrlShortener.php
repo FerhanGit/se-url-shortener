@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UrlShortenerRepository::class)]
+#[UniqueEntity(fields: ['longUrl', 'shorUrl'], ignoreNull: 'shortUrl')]
 class UrlShortener
 {
     #[ORM\Id]
@@ -14,7 +15,7 @@ class UrlShortener
     #[ORM\Column]
     private int $id;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     #[Assert\NotBlank]
     #[Assert\Url(
         message: 'The url {{ value }} is not a valid url',

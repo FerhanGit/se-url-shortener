@@ -6,6 +6,7 @@ use App\Entity\UrlShortener as EntityUrlShortener;
 use App\Form\UrlShortenerType;
 use App\Services\UrlShortener;
 use DateTimeImmutable;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,10 +46,11 @@ class UrlShortenerController extends AbstractController
     #[Route('/url/shortener/convert/toshort', name: 'url_shortener_convert_to_short')]
     public function convertUrlToShort(EntityManagerInterface $entityManager, Request $request, UrlShortener $urlShortenerService): Response
     {
+      
         $urlShortener = new EntityUrlShortener();
 
-        $form = $this->createForm(UrlShortenerType::class, $urlShortener);
-
+        $form = $this->createForm(UrlShortenerType::class, $urlShortener); 
+        
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid())  {
             $urlShortener = $form->getData();
@@ -61,9 +63,28 @@ class UrlShortenerController extends AbstractController
         }
 
         return $this->render('url_shortener/create.html.twig', [
-            'form' => $form,
+            'form' => $form
         ]);
     }
+
+    #[Route('/url/shortener/delete/{id}', name: 'url_shortener_delete')]
+    public function delete(EntityManagerInterface $entityManager, int $id, Request $request): Response
+    {
+        $vlidTime = $_ENV['SHORT_URL_VALID_TIME'];
+       
+        $urlShortener = $entityManager->getRepository(EntityUrlShortener::class)->find($id);
+
+        $entityManager->remove($urlShortener);
+        $entityManager->flush();
+
+        return $this->render('url_shortener/show.html.twig', [
+            'shortUrl' => $this->generateUrl('url_shortener_convert_to_long', [
+                'token' => $urlShortener->getShortUrl(),
+            ], UrlGeneratorInterface::ABSOLUTE_URL)
+        ]);
+    }
+
+
 
     #[Route('/{token}', name: 'url_shortener_convert_to_long', requirements: ['token' => '[a-zA-Z0-9]{9}'])]
     public function convertUrlToLong(EntityManagerInterface $entityManager, Request $request, string $token): Response

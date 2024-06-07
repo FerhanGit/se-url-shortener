@@ -9,13 +9,6 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Hello! ✅</h1>
-    {% if error ?? false %}
-        <p>{{error}}</p>
-    {% endif %}
-
-{{ form_start(form, {'attr': {'data-turbo': false}}) }}
-    {{ form_widget(form) }}
-{{ form_end(form) }}
+    <h1> {{ error }} </h1>
 </div>
 {% endblock %}
