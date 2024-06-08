@@ -55,6 +55,9 @@ git clone https://github.com/FerhanGit/se-url-shortener.git
 composer install
 ```
 - if you have installed Symfony CLI (https://symfony.com/download) you can then proceed with starting the Build-In Symfony server
+```
+symfony server:start
+```
 - Open in your browser the provided Local URL (http://127.0.0.1:8000/)
 
 ### App features

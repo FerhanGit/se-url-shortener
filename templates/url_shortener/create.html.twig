@@ -25,7 +25,7 @@
                 <div class="card">
                 <h5 class="card-header">URL shortener service</h5>
                 <div class="card-body">
-                     {{ form_start(form, {'attr': {'data-turbo': false}}) }}
+                     {{ form_start(form, {'attr': {'id': 'url_shortener_form', 'data-turbo': false}}) }}
                         {{ form_widget(form) }}
                     {{ form_end(form) }}
                 </div>
