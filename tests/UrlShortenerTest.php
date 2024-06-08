@@ -16,7 +16,7 @@ class UrlShortenerTest extends WebTestCase
         //$this->assertSelectorTextContains('body', 'Redirecting to <a href="/url/shortener/convert/toshort">/url/shortener/convert/toshort</a>');
     }
 
-    public function testUrlCreationPageIsLoaded(): void
+    public function testUrlCreationPageIsLoadedCorrectrly(): void
     {
         $client = static::createClient();
         $crawler = $client->request('GET', '/url/shortener/convert/toshort');
@@ -44,7 +44,19 @@ class UrlShortenerTest extends WebTestCase
         // submit the Form object
         $client->submit($form);
 
-       // $this->assertFormValue('#url_shortener_form', 'longUrl', 'https://symfony.com/doc/current/session.html');
+      //  $this->assertFormValue('#url_shortener_form', 'longUrl', 'https://symfony.com/doc/current/session.html');
 
+    }
+
+    public function testListingUrlsPageIsLoadedCorrectly(): void
+    {
+        $client = static::createClient();
+        $crawler = $client->request('GET', '/url/list/all');
+
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorTextContains('h4', 'Additional Info');
+        $this->assertSelectorTextContains('a', 'Delete');
+        $this->assertSelectorTextContains('#generateUrlLink', 'Generate new Short URL');
+        $this->assertSelectorExists('table');
     }
 }
