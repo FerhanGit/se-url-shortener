@@ -46,25 +46,30 @@ class UrlShortenerController extends AbstractController
     #[Route('/url/shortener/convert/toshort', name: 'url_shortener_convert_to_short')]
     public function convertUrlToShort(EntityManagerInterface $entityManager, Request $request, UrlShortener $urlShortenerService): Response
     {
-      
-        $urlShortener = new EntityUrlShortener();
+        try {
+            $urlShortener = new EntityUrlShortener();
 
-        $form = $this->createForm(UrlShortenerType::class, $urlShortener); 
-        
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid())  {
-            $urlShortener = $form->getData();
-            $urlShortener->setShortUrl($urlShortenerService->generetaToken());
-            $urlShortener->setCreatedAt(new DateTimeImmutable());
-            $entityManager->persist($urlShortener);
-            $entityManager->flush();
+            $form = $this->createForm(UrlShortenerType::class, $urlShortener); 
+            
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid())  {
+                $urlShortener = $form->getData();
+                $urlShortener->setShortUrl($urlShortenerService->generetaToken());
+                $urlShortener->setCreatedAt(new DateTimeImmutable());
+                $entityManager->persist($urlShortener);
+                $entityManager->flush();
 
-            return $this->redirectToRoute('url_shortener_show', ['id' => $urlShortener->getId()]);
+                return $this->redirectToRoute('url_shortener_show', ['id' => $urlShortener->getId()]);
+            }
+
+            return $this->render('url_shortener/create.html.twig', [
+                'form' => $form
+            ]);
+            
+        } catch (UniqueConstraintViolationException $e) {
+            $this->addFlash('error', 'Error! '. $e->getMessage());
+            return $this->redirectToRoute('url_shortener_convert_to_short');
         }
-
-        return $this->render('url_shortener/create.html.twig', [
-            'form' => $form
-        ]);
     }
 
     #[Route('/url/shortener/delete/{id}', name: 'url_shortener_delete')]

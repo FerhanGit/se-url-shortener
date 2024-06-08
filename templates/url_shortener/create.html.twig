@@ -10,10 +10,17 @@
 
 <div class="example-wrapper">
     <h1>Hello! ✅</h1>
-    {% if error ?? false %}
-        <p>{{error}}</p>
-    {% endif %}
-
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% for error in app.flashes('error') %}
+        <div class="alert alert-danger alert-dismissible fade show">
+            {{ error }}
+        </div>
+    {% endfor %}
+    
 {{ form_start(form, {'attr': {'data-turbo': false}}) }}
     {{ form_widget(form) }}
 {{ form_end(form) }}
