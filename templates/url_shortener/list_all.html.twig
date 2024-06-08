@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello UrlShortenerController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% for error in app.flashes('error') %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ error }}
+        </div>
+    {% endfor %}
+
+           
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">id</th>
+                        <th scope="col">Long URL</th>
+                        <th scope="col">Short URL</th>
+                        <th scope="col">Created At</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                {% for urlData in urlShortenerAll %}
+
+                
+                    <tr {% if (urlData.createdAt|date('U') <= 'now'|date('U') - validTime|date('U')) %} style="background:red; color:white" {% endif %}>
+                        <th scope="row">{{urlData.id}}</th>
+                        <td>{{urlData.longUrl}}</td>
+                        <td>{{ app.request.schemeAndHttpHost }}/{{urlData.shortUrl}}</td>
+                        <td>{{urlData.createdAt|date('Y-m-d H:i:s')}}</td>
+                        <td>
+                            <a href="{{ path('url_shortener_delete', {id: urlData.id}) }}" class="btn btn-primary" onclick="return confirm('Are you sure you want to delete this record?')">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                
+                </tbody>
+            </table>
+            
+
+            <div class="d-block text-center">
+                <a href="{{ path('url_shortener_convert_to_short') }}" class="btn btn-primary" style="margin: 50px auto">Generate new Short URL</a>
+            </div>
+
+{% endblock %}

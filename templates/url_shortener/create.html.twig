@@ -31,11 +31,19 @@
                 </div>
                  <div class="card-footer text-muted">
                     1. Enter any long URL and submit the form. <br />
-                    2. You will get a generated short URL corresponding to yours. <br />
+                    2. You will get a short URL corresponding to yours. <br />
                     3. Then you can use the short URL anywhere and it will redirect you to the original one!
                 </div>
            </div>
+        </div>
     </div>
 
-</div>
+    <div class="container">   
+        <div class="row d-flex justify-content-center" style="margin: 50px 0">
+            <div class="col-2" style="padding:25px;">
+                <a href="{{ path('url_shortener_list_all') }}" class="btn btn-primary" style="margin: 100px auto">View all Short URLs</a>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}

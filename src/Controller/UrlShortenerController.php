@@ -25,7 +25,7 @@ class UrlShortenerController extends AbstractController
     #[Route('/url/shortener/{id}', name: 'url_shortener_show')]
     public function show(EntityManagerInterface $entityManager, int $id, Request $request): Response
     {
-        $vlidTime = $_ENV['SHORT_URL_VALID_TIME'];
+        $validTime = $_ENV['SHORT_URL_VALID_TIME'];
        
         $urlShortener = $entityManager->getRepository(EntityUrlShortener::class)->find($id);
 
@@ -42,6 +42,27 @@ class UrlShortenerController extends AbstractController
             'longUrl' => $urlShortener->getLongUrl(),
         ]);
     }
+
+
+    #[Route('/url/list/all', name: 'url_shortener_list_all')]
+    public function listAllUrls(EntityManagerInterface $entityManager, Request $request): Response
+    {
+        $validTime = $_ENV['SHORT_URL_VALID_TIME'];
+       
+        $urlShortenerAll = $entityManager->getRepository(EntityUrlShortener::class)->findAll();
+
+        if (!$urlShortenerAll) {
+            throw $this->createNotFoundException(
+                'No Short URL found'
+            );
+        }
+
+        return $this->render('url_shortener/list_all.html.twig', [
+            'urlShortenerAll' => $urlShortenerAll,
+            'validTime' => $validTime,
+        ]);
+    }
+
 
 
     #[Route('/url/shortener/convert/toshort', name: 'url_shortener_convert_to_short')]
@@ -76,19 +97,27 @@ class UrlShortenerController extends AbstractController
 
     #[Route('/url/shortener/delete/{id}', name: 'url_shortener_delete')]
     public function delete(EntityManagerInterface $entityManager, int $id, Request $request): Response
-    {
-        $vlidTime = $_ENV['SHORT_URL_VALID_TIME'];
+    {     
+        try {
+            $urlShortener = $entityManager->getRepository(EntityUrlShortener::class)->find($id);
+
+            if (!$urlShortener) {
+                throw $this->createNotFoundException(
+                    'No Short URL found in our Data Base!'
+                );
+            }
+
+            
+            $entityManager->remove($urlShortener);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Short URL record deleted! Now you can use the same long URL to generate a new short URL!');
        
-        $urlShortener = $entityManager->getRepository(EntityUrlShortener::class)->find($id);
-
-        $entityManager->remove($urlShortener);
-        $entityManager->flush();
-
-        return $this->render('url_shortener/show.html.twig', [
-            'shortUrl' => $this->generateUrl('url_shortener_convert_to_long', [
-                'token' => $urlShortener->getShortUrl(),
-            ], UrlGeneratorInterface::ABSOLUTE_URL)
-        ]);
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Error! '. $e->getMessage());
+        }
+        
+        return $this->redirectToRoute('url_shortener_list_all');
     }
 
 
@@ -104,9 +133,9 @@ class UrlShortenerController extends AbstractController
             );
         }
 
-        $vlidTime = $_ENV['SHORT_URL_VALID_TIME'];
+        $validTime = $_ENV['SHORT_URL_VALID_TIME'];
 
-        if($urlShortener->getCreatedAt()->getTimeStamp() <= (time() - $vlidTime)) {
+        if($urlShortener->getCreatedAt()->getTimeStamp() <= (time() - $validTime)) {
             return $this->render('url_shortener/expired.html.twig', [
                 'shortUrl' => $request->getUri(),
             ]);
