@@ -38,7 +38,8 @@ class UrlShortenerController extends AbstractController
         return $this->render('url_shortener/show.html.twig', [
             'shortUrl' => $this->generateUrl('url_shortener_convert_to_long', [
                 'token' => $urlShortener->getShortUrl(),
-            ], UrlGeneratorInterface::ABSOLUTE_URL)
+            ], UrlGeneratorInterface::ABSOLUTE_URL),
+            'longUrl' => $urlShortener->getLongUrl(),
         ]);
     }
 
@@ -59,13 +60,14 @@ class UrlShortenerController extends AbstractController
                 $entityManager->persist($urlShortener);
                 $entityManager->flush();
 
+                $this->addFlash('success', 'Success! Short URL generated for your original URL!');
                 return $this->redirectToRoute('url_shortener_show', ['id' => $urlShortener->getId()]);
             }
 
             return $this->render('url_shortener/create.html.twig', [
                 'form' => $form
             ]);
-            
+
         } catch (UniqueConstraintViolationException $e) {
             $this->addFlash('error', 'Error! '. $e->getMessage());
             return $this->redirectToRoute('url_shortener_convert_to_short');

@@ -8,21 +8,34 @@
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
 
-<div class="example-wrapper">
-    <h1>Hello! ✅</h1>
     {% for message in app.flashes('success') %}
-        <div class="alert alert-success alert-dismissible fade show">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ message }}
         </div>
     {% endfor %}
     {% for error in app.flashes('error') %}
-        <div class="alert alert-danger alert-dismissible fade show">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
             {{ error }}
         </div>
     {% endfor %}
-    
-{{ form_start(form, {'attr': {'data-turbo': false}}) }}
-    {{ form_widget(form) }}
-{{ form_end(form) }}
+
+    <div class="container">   
+        <div class="row d-flex justify-content-center" style="margin: 50px 0">
+            <div class="col-10" style="padding:25px;">
+                <div class="card">
+                <h5 class="card-header">URL shortener service</h5>
+                <div class="card-body">
+                     {{ form_start(form, {'attr': {'data-turbo': false}}) }}
+                        {{ form_widget(form) }}
+                    {{ form_end(form) }}
+                </div>
+                 <div class="card-footer text-muted">
+                    1. Enter any long URL and submit the form. <br />
+                    2. You will get a generated short URL corresponding to yours. <br />
+                    3. Then you can use the short URL anywhere and it will redirect you to the original one!
+                </div>
+           </div>
+    </div>
+
 </div>
 {% endblock %}

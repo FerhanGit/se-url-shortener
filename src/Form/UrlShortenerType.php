@@ -15,7 +15,13 @@ class UrlShortenerType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('longUrl', TextType::class)
+            ->add('longUrl', TextType::class, [
+                'label' => 'Your Long URL',
+                'attr' => [
+                    'placeholder' => 'Enter your Long URL',
+                    'title' => 'Enter your Long URL',
+                ]
+            ])
             ->add('save', SubmitType::class, ['label' => 'Create Short URL']);
     }
 

@@ -8,7 +8,50 @@
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
 
-<div class="example-wrapper">
-    <h1>The generated short URL is: {{ shortUrl }} </h1>
-</div>
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% for error in app.flashes('error') %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ error }}
+        </div>
+    {% endfor %}
+
+
+    <div class="container">   
+        <div class="row d-flex justify-content-center" style="margin: 50px 0">
+            <div class="col-10" style="padding:25px;">
+                <div class="card">
+                <h5 class="card-header">URL shortener service</h5>
+                <div class="card-body">
+                    <h5 class="card-title" style="margin:20px 0 0 0">Your original URL is:</h5>
+                    <div class="d-inline justify-content-start">
+                        <p class="card-text">{{ longUrl }}</p>
+                    </div>
+
+                    <h5 class="card-title" style="margin:20px 0 0 0 ">The generated short URL is:</h5>
+                    <div class="d-inline justify-content-start">
+                        <p class="card-text">{{ shortUrl }}</p>
+                        <button class="btn btn-secondary" onclick="copyText()">Copy the URL</button>
+                    </div>
+
+                    <div class="d-block text-center">
+                        <a href="{{ path('url_shortener_convert_to_short') }}" class="btn btn-primary" style="margin: 50px auto">Generate new Short URL</a>
+                    </div>
+
+                    
+                </div>
+           </div>
+    </div>
+    
+    <script>
+        function copyText() {
+            navigator.clipboard.writeText
+                ("{{ shortUrl }}");
+        }
+    </script>
+
+
 {% endblock %}
