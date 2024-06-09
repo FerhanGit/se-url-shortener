@@ -59,6 +59,10 @@ composer install
 symfony server:start
 ```
 - Open in your browser the provided Local URL (http://127.0.0.1:8000/)
+- Additionally you can open your preffered terminal, go to the project folder and run available tests by executing:
+```
+php bin/phpunit
+```
 
 ### App features
 - The main page is located on http://127.0.0.1:8000/ (if you use the build-in symfony server)
@@ -70,6 +74,7 @@ symfony server:start
 - You are able to quickly copy the newly generated Short URL, by hitting the provied `Copy the URL` button. There you have also a button to create a new Short URL - in case you want so.
 - In addition there is a page for listing all available records available in the Data Base. You can see all details regarding each of them and if some Short URL has expired - its row is colored in red.
 - There is a Delete button for each record in the listing page, using wich you can delete any of them - especially if it is expired and you want to be able to create a new Short URL, corresponding to your original Long URL. It is also available a button to redirect you to the page for creation a new Short URL
+- Automated PHP Unit and End to End tests are developed and can be executed by running ***php bin/phpuinit*** command on your terminal
 
 ### Usage of the Short URL
 - When you open with your browser the generates Short URL you will be redirected to the original URL
