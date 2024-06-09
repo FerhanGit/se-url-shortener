@@ -8,6 +8,7 @@ use App\Services\UrlShortener;
 use DateTimeImmutable;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -76,6 +77,11 @@ class UrlShortenerController extends AbstractController
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid())  {
                 $urlShortener = $form->getData();
+
+                if (!$urlShortenerService->checkIfUrlExists($urlShortener->getLongUrl())) {
+                    throw new Exception('Your URL does not exists, please enter a valid URL');
+                }
+                
                 $urlShortener->setShortUrl($urlShortenerService->generateToken());
                 $urlShortener->setCreatedAt(new DateTimeImmutable());
                 $entityManager->persist($urlShortener);
@@ -89,7 +95,7 @@ class UrlShortenerController extends AbstractController
                 'form' => $form
             ]);
 
-        } catch (UniqueConstraintViolationException $e) {
+        } catch (\Exception $e) {
             $this->addFlash('error', 'Error! '. $e->getMessage());
             return $this->redirectToRoute('url_shortener_convert_to_short');
         }

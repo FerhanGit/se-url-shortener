@@ -32,4 +32,11 @@ final class UrlShortener
 
         return $token;
     }
+
+    public function checkIfUrlExists(string $url){
+        $headers = @get_headers($url);
+        if($headers === false) return false;
+        
+        return preg_grep('~^HTTP/\d+\.\d+\s+2\d{2}~',$headers) ? true : false;
+      }
 }
