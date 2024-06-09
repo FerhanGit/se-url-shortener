@@ -76,7 +76,7 @@ class UrlShortenerController extends AbstractController
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid())  {
                 $urlShortener = $form->getData();
-                $urlShortener->setShortUrl($urlShortenerService->generetaToken());
+                $urlShortener->setShortUrl($urlShortenerService->generateToken());
                 $urlShortener->setCreatedAt(new DateTimeImmutable());
                 $entityManager->persist($urlShortener);
                 $entityManager->flush();

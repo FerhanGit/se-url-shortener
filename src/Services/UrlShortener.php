@@ -15,7 +15,7 @@ final class UrlShortener
         $this->urlShortenerEntity = $urlShortenerEntity;
     }
 
-    public function generetaToken(): string
+    public function generateToken(): string
     {
         $token = substr(
             base64_encode(

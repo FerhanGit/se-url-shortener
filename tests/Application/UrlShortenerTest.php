@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Application;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -11,9 +11,7 @@ class UrlShortenerTest extends WebTestCase
         $client = static::createClient();
         $crawler = $client->request('GET', '/');
 
-      //  $this->assertResponseIsSuccessful();
         $this->assertResponseRedirects('/url/shortener/convert/toshort', 302, $message = '');
-        //$this->assertSelectorTextContains('body', 'Redirecting to <a href="/url/shortener/convert/toshort">/url/shortener/convert/toshort</a>');
     }
 
     public function testUrlCreationPageIsLoadedCorrectrly(): void
@@ -23,7 +21,6 @@ class UrlShortenerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h5', 'URL shortener service');
-      //  $this->assertSelectorTextContains('input', 'Create Short URL');
         $this->assertSelectorTextContains('button', 'Create Short URL');
     }
 
@@ -38,14 +35,14 @@ class UrlShortenerTest extends WebTestCase
 
         // retrieve the Form object for the form belonging to this button
         $form = $buttonCrawlerNode->form();
+
         // set values on a form object
         $form['url_shortener[longUrl]'] = 'https://symfony.com/doc/current/session.html';
         
         // submit the Form object
         $client->submit($form);
 
-      //  $this->assertFormValue('#url_shortener_form', 'longUrl', 'https://symfony.com/doc/current/session.html');
-
+        $this->assertResponseRedirects('/url/shortener/convert/toshort', 302, $message = '');
     }
 
     public function testListingUrlsPageIsLoadedCorrectly(): void
