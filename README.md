@@ -80,3 +80,18 @@ php bin/phpunit
 - When you open with your browser the generates Short URL you will be redirected to the original URL
 - If the requested Short URL is expired - you will get a descriptive error message on top of the page and a button `Generate new Short URL`, which you can use to create a new one
 
+
+### Screens
+- Generate Short URL page
+
+![alt text](image-1.png)
+
+
+- Short URL details
+
+![alt text](image-2.png)
+
+
+- Listing available Short URL records
+
+![alt text](image.png)
